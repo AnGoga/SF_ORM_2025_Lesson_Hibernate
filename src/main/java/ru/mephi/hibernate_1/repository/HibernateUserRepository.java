@@ -39,13 +39,6 @@ public class HibernateUserRepository implements UserRepository {
     @Transactional(readOnly = true)
     public Optional<User> findById(Long id) {
         User user = getSession().find(User.class, id);
-        User user1 = getSession().find(User.class, id);
-        User user2 = getSession().find(User.class, id);
-        User user3 = getSession().find(User.class, id);
-        User user4 = getSession().find(User.class, id);
-
-        user.setEmail("wert");
-
         return Optional.ofNullable(user);
     }
 
@@ -62,7 +55,10 @@ public class HibernateUserRepository implements UserRepository {
         Session session = getSession();
         for (int i = 0; i < users.size(); i++) {
             session.persist(users.get(i));
-            if (i % 1000 == 0) session.flush();
+            if (i % 1000 == 0) {
+                session.flush();
+                session.clear();
+            }
         }
         return users;
     }
